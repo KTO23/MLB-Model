@@ -12,195 +12,234 @@ team_data = refresh_team_data_df()
 #team_data = get_stored_team_df()
 
 
-#print(pitcher_data)
-#print(team_data)
+#print(pitcher_data.head(40))
+#print(team_data.head(40))
 
 
 
 def game_func():
-    home_team = "Seattle"
-    home_team_acr = "SEA"
-    home_team_pitcher = "Bryan Woo"
-    away_team = "NY Yankees"
-    away_team_acr = "NYY"
-    away_team_pitcher = "Luis Gil"
+    #setting teams and pitchers
+    home_team = "Baltimore"
+    home_acr = "BAL"
+    home_starter = "Dean Kremer"
+    away_team = "SF Giants"
+    away_acr = "SFG"
+    away_starter = "Hayden Birdsong"
 
+    #data colleted from team_data
+    home_rpg = 0
+    home_rpg_last3 = 0
+    home_rpg_at_home = 0
+    away_rpg = 0
+    away_rpg_last3 = 0
+    away_rpg_while_away = 0
 
-    home_team_rpg = 0
-    home_team_rpg_last3 = 0
-    home_team_rpg_at_home = 0
-    away_team_rpg = 0
-    away_team_rpg_last3 = 0
-    away_team_rpg_while_away = 0
-
+    #finding each team within our team_data DataFrame
     for index,row in team_data.iterrows():
         if row['Team'] == home_team:
-            home_team_rpg = team_data['2024'][index]
-            home_team_rpg_last3 = team_data['Last 3'][index]
-            home_team_rpg_at_home = team_data['Home'][index]
+            home_rpg = team_data['2024'][index]
+            home_rpg_last3 = team_data['Last 3'][index]
+            home_rpg_at_home = team_data['Home'][index]
         elif row['Team'] == away_team:
-            away_team_rpg = team_data['2024'][index]
-            away_team_rpg_last3 = team_data['Last 3'][index]
-            away_team_rpg_while_away = team_data['Home'][index]
+            away_rpg = team_data['2024'][index]
+            away_rpg_last3 = team_data['Last 3'][index]
+            away_rpg_while_away = team_data['Home'][index]
     
 
-    home_pitcher_era = 0
-    home_pitcher_IP = 0
-    home_pitcher_starts = 0
-    home_pitcher_games = 0
-    home_pitcher_avg_IP_per_start = 0
+    #starter's variables
+    home_starter_era = 0
+    home_starter_IP = 0
+    home_starter_starts = 0
+    home_starter_games = 0
+    home_starter_avg_IP = 0
 
-    away_pitcher_era = 0
-    away_pitcher_IP = 0
-    away_pitcher_starts = 0
-    away_pitcher_games = 0
-    away_pitcher_avg_IP_per_start = 0
+    away_starter_era = 0
+    away_starter_IP = 0
+    away_starter_starts = 0
+    away_starter_games = 0
+    away_starter_avg_IP = 0
 
+    #finding the starter from the pitcher_data DataFrame
     for index,row in pitcher_data.iterrows():
-        if row['Name'] == home_team_pitcher:
-            home_pitcher_era = float(pitcher_data['ERAERA - Earned Run Average ((ER*9)/IP)'][index])
-            home_pitcher_IP = float(pitcher_data['IPIP - Innings Pitched'][index])
-            temp_IP_floored = math.floor(home_pitcher_IP)
-            temp_IP_difference = home_pitcher_IP - temp_IP_floored
+        if row['Name'] == home_starter:
+            #era and IP data
+            home_starter_era = float(pitcher_data['ERAERA - Earned Run Average ((ER*9)/IP)'][index])
+            home_starter_IP = float(pitcher_data['IPIP - Innings Pitched'][index])
+
+            #changing innings format: 17.1 --> 17.3, 67.2 --> 67.667
+            temp_IP_floored = math.floor(home_starter_IP)
+            temp_IP_difference = home_starter_IP - temp_IP_floored
             extra_outs = 0
             if(round(temp_IP_difference, 1) == 0.1):
                 extra_outs = 1
             elif(round(temp_IP_difference, 1) == 0.2):
                 extra_outs = 2
-            home_pitcher_starts = float(pitcher_data['GSGS - Games Started'][index])
-            home_pitcher_games = float(pitcher_data['GG - Games Pitched'][index])
-            if ((home_pitcher_starts / home_pitcher_games) < 0.5):
-                home_pitcher_avg_IP_per_start = 2
+            
+            #making sure they are a true starter
+            #otherwise inning estimate will not be accurate
+            home_starter_starts = float(pitcher_data['GSGS - Games Started'][index])
+            home_starter_games = float(pitcher_data['GG - Games Pitched'][index])
+            #threshold .5? could change later
+            if ((home_starter_starts / home_starter_games) < 0.5):
+                #MANUALLY ENTER:
+                home_starter_avg_IP = -1
             else:
-                home_pitcher_IP = ((temp_IP_floored * 3) + extra_outs)/3
-                home_pitcher_avg_IP_per_start = home_pitcher_IP/home_pitcher_starts
-        elif row['Name'] == away_team_pitcher:
-            away_pitcher_era = float(pitcher_data['ERAERA - Earned Run Average ((ER*9)/IP)'][index])
-            away_pitcher_IP = float(pitcher_data['IPIP - Innings Pitched'][index])
-            temp_IP_floored = math.floor(away_pitcher_IP)
-            temp_IP_difference = away_pitcher_IP - temp_IP_floored
+                #result from the change of decimal formatting
+                home_starter_IP = ((temp_IP_floored * 3) + extra_outs)/3
+                #getting avg start length
+                home_starter_avg_IP = home_starter_IP/home_starter_starts 
+
+        elif row['Name'] == away_starter:
+            #era and IP data
+            away_starter_era = float(pitcher_data['ERAERA - Earned Run Average ((ER*9)/IP)'][index])
+            away_starter_IP = float(pitcher_data['IPIP - Innings Pitched'][index])
+            
+            #changing innings format: 17.1 --> 17.3, 67.2 --> 67.667
+            temp_IP_floored = math.floor(away_starter_IP)
+            temp_IP_difference = away_starter_IP - temp_IP_floored
             extra_outs = 0
             if(round(temp_IP_difference, 1) == 0.1):
                 extra_outs = 1
             elif(round(temp_IP_difference, 1) == 0.2):
                 extra_outs = 2
-            away_pitcher_starts = float(pitcher_data['GSGS - Games Started'][index])
-            away_pitcher_games = float(pitcher_data['GG - Games Pitched'][index])
-            if ((away_pitcher_starts / away_pitcher_games) < 0.5):
-                #CHANGE IF THIS IS THE CASE
-                away_pitcher_avg_IP_per_start = 2
+
+            #making sure they are a true starter
+            #otherwise inning estimate will not be accurate
+            away_starter_starts = float(pitcher_data['GSGS - Games Started'][index])
+            away_starter_games = float(pitcher_data['GG - Games Pitched'][index])
+            #threshold .5? could change later
+            if ((away_starter_starts / away_starter_games) < 0.5):
+                #MANUALLY ENTER:
+                away_starter_avg_IP = 3
             else:
-                away_pitcher_IP = ((temp_IP_floored * 3) + extra_outs)/3
-                away_pitcher_avg_IP_per_start = away_pitcher_IP/away_pitcher_starts
+                #result from the change of decimal formatting
+                away_starter_IP = ((temp_IP_floored * 3) + extra_outs)/3
+                #getting avg start length
+                away_starter_avg_IP = away_starter_IP/away_starter_starts
 
-    home_pitcher_avg_outs_per_start = int(round(home_pitcher_avg_IP_per_start*3))
-    away_pitcher_avg_outs_per_start = int(round(away_pitcher_avg_IP_per_start*3))
+    #converting avg IP to outs
+    home_starter_avg_outs = int(round(home_starter_avg_IP*3))
+    away_starter_avg_outs = int(round(away_starter_avg_IP*3))
 
 
-    temp_home_reliever_ERA = 0
-    temp_home_reliever_IP = 0
-    temp_home_reliever_ER = 0
-    home_pitcher_relievers_outs = 0
-    home_pitcher_relievers_ER = 0
+    
 
-    temp_away_reliever_ERA = 0
-    temp_away_reliever_IP = 0
-    temp_away_reliever_ER = 0
-    away_pitcher_relievers_outs = 0
-    away_pitcher_relievers_ER = 0
+    #temp for calculting total number of runs allowed from bullpen of each team
+    temp_home_ERA = 0
+    temp_home_IP = 0
+    temp_home_ER = 0
+    home_bullpen_outs = 0
+    home_bullpen_ER = 0
+
+    temp_away_ERA = 0
+    temp_away_IP = 0
+    temp_away_ER = 0
+    away_bullpen_outs = 0
+    away_bullpen_ER = 0
 
     for index,row in pitcher_data.iterrows():
-        temp_pitcher_outs = 0
-        temp_home_reliever_ERA = 0
-        temp_home_reliever_IP = 0
-        temp_home_reliever_ER = 0
-        temp_away_reliever_ERA = 0
-        temp_away_reliever_IP = 0
-        temp_away_reliever_ER = 0
-
-        if row['Team'] == home_team_acr:
+        if row['Team'] == home_acr:
             temp_games = float(pitcher_data['GG - Games Pitched'][index])
             temp_starts = float(pitcher_data['GSGS - Games Started'][index])
             percent_starts = temp_starts/temp_games
             
             if percent_starts < 0.5:
-                temp_home_reliever_ERA = float(pitcher_data['ERAERA - Earned Run Average ((ER*9)/IP)'][index])
-                temp_home_reliever_IP = float(pitcher_data['IPIP - Innings Pitched'][index])
+                temp_home_ERA = float(pitcher_data['ERAERA - Earned Run Average ((ER*9)/IP)'][index])
+                temp_home_IP = float(pitcher_data['IPIP - Innings Pitched'][index])
 
-                temp_IP_floored = math.floor(temp_home_reliever_IP)
-                temp_IP_difference = temp_home_reliever_IP - temp_IP_floored
+                temp_IP_floored = math.floor(temp_home_IP)
+                temp_IP_difference = temp_home_IP - temp_IP_floored
                 extra_outs = 0
                 if(round(temp_IP_difference, 1) == 0.1):
                     extra_outs = 1
                 elif(round(temp_IP_difference, 1) == 0.2):
                     extra_outs = 2
 
-                temp_pitcher_outs = (temp_IP_floored * 3) + extra_outs
+                temp_outs = (temp_IP_floored * 3) + extra_outs
                 
-                temp_home_reliever_ER = (temp_home_reliever_ERA * temp_pitcher_outs * 3)/9
-                home_pitcher_relievers_ER = home_pitcher_relievers_ER + temp_home_reliever_ER
-                home_pitcher_relievers_outs = home_pitcher_relievers_outs + temp_pitcher_outs
+                temp_home_ER = (temp_home_ERA * temp_outs * 3)/9
+                home_bullpen_ER = home_bullpen_ER + temp_home_ER
+                home_bullpen_outs = home_bullpen_outs + temp_outs
 
 
-        elif row['Team'] == away_team_acr:
+        elif row['Team'] == away_acr:
             temp_games = float(pitcher_data['GG - Games Pitched'][index])
             temp_starts = float(pitcher_data['GSGS - Games Started'][index])
             percent_starts = temp_starts/temp_games
             
             if percent_starts < 0.5:
-                temp_away_reliever_ERA = float(pitcher_data['ERAERA - Earned Run Average ((ER*9)/IP)'][index])
-                temp_away_reliever_IP = float(pitcher_data['IPIP - Innings Pitched'][index])
+                temp_away_ERA = float(pitcher_data['ERAERA - Earned Run Average ((ER*9)/IP)'][index])
+                temp_away_IP = float(pitcher_data['IPIP - Innings Pitched'][index])
 
-                temp_IP_floored = math.floor(temp_away_reliever_IP)
-                temp_IP_difference = temp_away_reliever_IP - temp_IP_floored
+                temp_IP_floored = math.floor(temp_away_IP)
+                temp_IP_difference = temp_away_IP - temp_IP_floored
                 extra_outs = 0
                 if(round(temp_IP_difference, 1) == 0.1):
                     extra_outs = 1
                 elif(round(temp_IP_difference, 1) == 0.2):
                     extra_outs = 2
 
-                temp_pitcher_outs = (temp_IP_floored * 3) + extra_outs
+                temp_outs = (temp_IP_floored * 3) + extra_outs
                 
-                temp_away_reliever_ER = (temp_away_reliever_ERA * temp_pitcher_outs * 3)/9
-                away_pitcher_relievers_ER = away_pitcher_relievers_ER + temp_away_reliever_ER
-                away_pitcher_relievers_outs = away_pitcher_relievers_outs + temp_pitcher_outs
+                temp_away_ER = (temp_away_ERA * temp_outs * 3)/9
+                away_bullpen_ER = away_bullpen_ER + temp_away_ER
+                away_bullpen_outs = away_bullpen_outs + temp_outs
 
 
-    home_relievers_outs_needed = 27 - home_pitcher_avg_outs_per_start
-    away_relievers_outs_needed = 27 - away_pitcher_avg_outs_per_start
+    home_bullpen_outs_needed = 27 - home_starter_avg_outs
+    away_bullpen_outs_needed = 27 - away_starter_avg_outs
 
-    home_relievers_era = home_pitcher_relievers_ER / float(home_pitcher_relievers_outs/3)
-    away_relievers_era = away_pitcher_relievers_ER / float(away_pitcher_relievers_outs/3)
+    home_bullpen_era = home_bullpen_ER / float(home_bullpen_outs/3)
+    away_bullpen_era = away_bullpen_ER / float(away_bullpen_outs/3)
 
-    expected_runs_home_starter = (home_pitcher_era/9) * float(home_pitcher_avg_outs_per_start/3)
-    expected_runs_away_starter = (away_pitcher_era/9) * float(away_pitcher_avg_outs_per_start/3)
+    est_home_starter_runs = (home_starter_era/9) * float(home_starter_avg_outs/3)
+    est_away_starter_runs = (away_starter_era/9) * float(away_starter_avg_outs/3)
 
-    expected_runs_home_relievers = (home_relievers_era/9) * float(home_relievers_outs_needed/3)
-    expected_runs_away_relievers = (away_relievers_era/9) * float(away_relievers_outs_needed/3)
+    est_home_bullpen_runs = (home_bullpen_era/9) * float(home_bullpen_outs_needed/3)
+    est_away_bullpen_runs = (away_bullpen_era/9) * float(away_bullpen_outs_needed/3)
 
-    expected_home_team_runs_allowed = expected_runs_home_starter + expected_runs_home_relievers
-    expected_away_team_runs_allowed = expected_runs_away_starter + expected_runs_away_relievers
-    expected_total_from_runs_allowed = expected_home_team_runs_allowed + expected_away_team_runs_allowed
+    est_runs_allowed_home = est_home_starter_runs + est_home_bullpen_runs
+    est_runs_allowed_away = est_away_starter_runs + est_away_bullpen_runs
 
-    expected_total_from_rpg = float(home_team_rpg) + float(away_team_rpg)
+    est_total_runs_allowed = est_runs_allowed_home + est_runs_allowed_away
+    est_total_rpg = float(home_rpg) + float(away_rpg)
 
-    print("Expected home starter IP: " + str(round(home_pitcher_avg_outs_per_start / 3, 2)))
-    print("Expected away starter IP: " + str(round(away_pitcher_avg_outs_per_start / 3, 2)))
+    averaged_amount = (est_total_runs_allowed + est_total_rpg)/2
+
     print()
-    print("Expected home starter runs allowed: " + str(round(expected_runs_home_starter, 2)))
-    print("Expected away starter runs allowed: " + str(round(expected_runs_away_starter, 2)))
     print()
-    print("Expected home relievers runs allowed: " + str(round(expected_runs_home_relievers, 2)))
-    print("Expected away relievers runs allowed: " + str(round(expected_runs_away_relievers, 2)))
     print()
-    print("Expected home team runs allowed: " + str(round(expected_home_team_runs_allowed, 2)))
-    print("Expected away team runs allowed: " + str(round(expected_away_team_runs_allowed, 2)))
+    print(home_acr)
+    print(home_starter + "      ERA: " + str(home_starter_era) + "     IP: " + str(round(home_starter_IP, 2)) + "     Games: " + str(home_starter_games) + "       Starts: " + str(home_starter_starts))
+    print(home_starter + "      EST RUNS ALLOWED: " + str(round(est_home_starter_runs, 2)) + "       AVG IP: " + str(round(home_starter_avg_outs / 3, 2)) + "      AVG OUTS: " + str(home_starter_avg_outs))
     print()
-    print("Home team runs per game: " + str(home_team_rpg))
-    print("Away team runs per game: " + str(away_team_rpg))
+    print(away_acr)
+    print(away_starter + "      ERA: " + str(away_starter_era) + "     IP: " + str(round(away_starter_IP, 2)) + "     Games: " + str(away_starter_games) + "       Starts: " + str(away_starter_starts))
+    print(away_starter + "      EST RUNS ALLOWED: " + str(round(est_away_starter_runs, 2)) + "       AVG IP: " + str(round(away_starter_avg_outs / 3, 2)) + "      AVG OUTS: " + str(away_starter_avg_outs))
     print()
-    print("Expected total from runs per game: " + str(round(expected_total_from_rpg, 2)))
-    print("Expected total from runs allowed: " + str(round(expected_total_from_runs_allowed, 2)))
-
+    print(home_acr + " BULLPEN")
+    print("ERA: " + str(round(home_bullpen_era, 2)) + "     IP: " + str(round(home_bullpen_outs/3, 2)))
+    print("EST RUNS ALLOWED: " + str(round(est_home_bullpen_runs, 2)) + "       IP NEEDED: " + str(round(home_bullpen_outs_needed/3, 2)))
+    print()
+    print(away_acr +" BULLPEN")
+    print("ERA: " + str(round(away_bullpen_era, 2)) + "     IP: " + str(round(away_bullpen_outs/3, 2)))
+    print("EST RUNS ALLOWED: " + str(round(est_away_bullpen_runs, 2)) + "       IP NEEDED: " + str(round(away_bullpen_outs_needed/3, 2)))
+    print()
+    print()
+    print(home_acr + " TOTALS")
+    print("EST RUNS ALLOWED: " + str(round(est_runs_allowed_home, 2)))
+    print("RUNS PER GAME: " + str(home_rpg))
+    print()
+    print(away_acr + " TOTALS")
+    print("EST RUNS ALLOWED: " + str(round(est_runs_allowed_away, 2)))
+    print("RUNS PER GAME: " + str(away_rpg))
+    print()
+    print("SCORE")
+    print(home_acr + " - " + str(round((float(home_rpg) + est_runs_allowed_away)/2, 2)))
+    print(away_acr + " - " + str(round((float(away_rpg) + est_runs_allowed_home)/2, 2)))
+    print("TOTAL: " + str(round(averaged_amount, 2)))
+    print()
+    print()
+    print()
 
 game_func()

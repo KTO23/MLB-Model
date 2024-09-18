@@ -19,12 +19,12 @@ team_data = refresh_team_data_df()
 
 def game_func():
     #setting teams and pitchers
-    home_team = "Baltimore"
-    home_acr = "BAL"
-    home_starter = "Dean Kremer"
-    away_team = "SF Giants"
-    away_acr = "SFG"
-    away_starter = "Hayden Birdsong"
+    home_team = "Seattle"
+    home_acr = "SEA"
+    home_starter = "Bryce Miller"
+    away_team = "NY Yankees"
+    away_acr = "NYY"
+    away_starter = "Nestor Cortes"
 
     #data colleted from team_data
     home_rpg = 0
@@ -110,7 +110,7 @@ def game_func():
             #threshold .5? could change later
             if ((away_starter_starts / away_starter_games) < 0.5):
                 #MANUALLY ENTER:
-                away_starter_avg_IP = 3
+                away_starter_avg_IP = -1
             else:
                 #result from the change of decimal formatting
                 away_starter_IP = ((temp_IP_floored * 3) + extra_outs)/3
@@ -237,6 +237,7 @@ def game_func():
     print("SCORE")
     print(home_acr + " - " + str(round((float(home_rpg) + est_runs_allowed_away)/2, 2)))
     print(away_acr + " - " + str(round((float(away_rpg) + est_runs_allowed_home)/2, 2)))
+    print("DIFFERENCE: " + str(round(((float(home_rpg) + est_runs_allowed_away)/2) - ((float(away_rpg) + est_runs_allowed_home)/2), 2)))
     print("TOTAL: " + str(round(averaged_amount, 2)))
     print()
     print()

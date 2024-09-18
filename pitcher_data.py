@@ -33,3 +33,8 @@ def pitcher_data_func():
 
     #troubleshooting
     #print(pitcher_df)
+
+def print_unqiue_pitcher_data_teams():
+    pitcherdf = pitcher_data_func()
+    print("Pitcher Data Unique Teams")
+    print(pitcherdf['Team'].unique())

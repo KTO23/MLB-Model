@@ -27,3 +27,8 @@ def team_data_func():
     team_runs_per_game_df = team_runs_per_game_df.drop(['Rank'], axis=1)
     return(team_runs_per_game_df)
 
+
+def print_unqiue_team_data_teams():
+    teamdf = team_data_func()
+    print("Team Data Unique Teams")
+    print(teamdf['Team'].unique())

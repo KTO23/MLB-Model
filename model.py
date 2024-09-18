@@ -243,4 +243,8 @@ def game_func():
     print()
     print()
 
+def user_interface():
+    input_home_team = "EX"
+    input_home_acr = "EX"
+
 game_func()

@@ -29,7 +29,6 @@ def pitcher_data_func():
         length = len(pitcher_df)
         pitcher_df.loc[length] = individual_row_data
 
-
     return pitcher_df
 
     #troubleshooting

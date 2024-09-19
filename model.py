@@ -77,6 +77,9 @@ espn_to_acr = {
 }
 
 
+home_starter_IP_var = -1
+away_starter_IP_var = -1
+
 def game_func(home_input, home_input_acr, home_input_starter, away_input, away_input_acr, away_input_starter):
     #setting teams and pitchers
     home_team = home_input
@@ -142,7 +145,7 @@ def game_func(home_input, home_input_acr, home_input_starter, away_input, away_i
             #threshold .5? could change later
             if ((home_starter_starts / home_starter_games) < 0.5):
                 #MANUALLY ENTER:
-                home_starter_avg_IP = -1
+                home_starter_avg_IP = away_starter_IP_var
             else:
                 #result from the change of decimal formatting
                 home_starter_IP = ((temp_IP_floored * 3) + extra_outs)/3
@@ -170,7 +173,7 @@ def game_func(home_input, home_input_acr, home_input_starter, away_input, away_i
             #threshold .5? could change later
             if ((away_starter_starts / away_starter_games) < 0.5):
                 #MANUALLY ENTER:
-                away_starter_avg_IP = -1
+                away_starter_avg_IP = away_starter_IP_var
             else:
                 #result from the change of decimal formatting
                 away_starter_IP = ((temp_IP_floored * 3) + extra_outs)/3
@@ -313,4 +316,5 @@ def user_interface():
     #use dictionary to get matching acr and correct name for team table
 
 
-game_func(home_input="", home_input_acr="", home_input_starter="", away_input="", away_input_acr="", away_input_starter="")
+
+game_func(home_input="Houston", home_input_acr="HOU", home_input_starter="Yusei Kikuchi", away_input="LA Angels", away_input_acr="LAA", away_input_starter="Jose Suarez")

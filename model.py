@@ -7,24 +7,84 @@ import math
 pitcher_data = refresh_pitcher_df()
 team_data = refresh_team_data_df()
 
-
 #pitcher_data = get_stored_pitcher_df()
 #team_data = get_stored_team_df()
 
+espn_to_teams_data_dict = {
+    "Giants": "SF Giants",
+    "Orioles": "Baltimore",
+    "Diamondbacks": "Arizona",
+    "Rockies": "Colorado",
+    "White Sox": "Chi Sox",
+    "Angels": "LA Angels",
+    "Athletics": "Oakland",
+    "Cubs": "Chi Cubs",
+    "Braves": "Atlanta",
+    "Reds": "Cincinnati",
+    "Astros": "Houston",
+    "Padres": "San Diego",
+    "Dodgers": "LA Dodgers",
+    "Marlins": "Miami",
+    "Twins": "Minnesota",
+    "Guardians": "Cleveland",
+    "Red Sox": "Boston",
+    "Rays": "Tampa Bay",
+    "Nationals": "Washington",
+    "Mets": "NY Mets",
+    "Tigers": "Detroit",
+    "Royals": "Kansas City",
+    "Phillies": "Philadelphia",
+    "Brewers": "Milwaukee",
+    "Pirates": "Pittsburgh",
+    "Cardinals": "St. Louis",
+    "Blue Jays": "Toronto",
+    "Rangers": "Texas",
+    "Yankees": "NY Yankees",
+    "Mariners": "Seattle",
+}
 
-#print(pitcher_data.head(40))
-#print(team_data.head(40))
+espn_to_acr = {
+    "Giants": "SFG",
+    "Orioles": "BAL",
+    "Diamondbacks": "ARI",
+    "Rockies": "COL",
+    "White Sox": "CHW",
+    "Angels": "LAA",
+    "Athletics": "OAK",
+    "Cubs": "CHC",
+    "Braves": "ATL",
+    "Reds": "CIN",
+    "Astros": "HOU",
+    "Padres": "SDP",
+    "Dodgers": "LAD",
+    "Marlins": "MIA",
+    "Twins": "MIN",
+    "Guardians": "CLE",
+    "Red Sox": "BOS",
+    "Rays": "TBR",
+    "Nationals": "WSN",
+    "Mets": "NYM",
+    "Tigers": "DET",
+    "Royals": "KCR",
+    "Phillies": "PHI",
+    "Brewers": "MIL",
+    "Pirates": "PIT",
+    "Cardinals": "STL",
+    "Blue Jays": "TOR",
+    "Rangers": "TEX",
+    "Yankees": "NYY",
+    "Mariners": "SEA",
+}
 
 
-
-def game_func():
+def game_func(home_input, home_input_acr, home_input_starter, away_input, away_input_acr, away_input_starter):
     #setting teams and pitchers
-    home_team = "Seattle"
-    home_acr = "SEA"
-    home_starter = "Bryce Miller"
-    away_team = "NY Yankees"
-    away_acr = "NYY"
-    away_starter = "Nestor Cortes"
+    home_team = home_input
+    home_acr = home_input_acr
+    home_starter = home_input_starter
+    away_team = away_input
+    away_acr = away_input_acr
+    away_starter = away_input_starter
 
     #data colleted from team_data
     home_rpg = 0
@@ -244,7 +304,13 @@ def game_func():
     print()
 
 def user_interface():
-    input_home_team = "EX"
-    input_home_acr = "EX"
+    #find through parsing html
+    espn_away_team = "EX"
+    espn_home_team = "EX"
+    espn_away_starter = "EX"
+    espn_home_starter = "EX"
 
-game_func()
+    #use dictionary to get matching acr and correct name for team table
+
+
+game_func(home_input="", home_input_acr="", home_input_starter="", away_input="", away_input_acr="", away_input_starter="")

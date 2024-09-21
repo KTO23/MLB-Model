@@ -10,72 +10,6 @@ team_data = refresh_team_data_df()
 #pitcher_data = get_stored_pitcher_df()
 #team_data = get_stored_team_df()
 
-espn_to_teams_data_dict = {
-    "Giants": "SF Giants",
-    "Orioles": "Baltimore",
-    "Diamondbacks": "Arizona",
-    "Rockies": "Colorado",
-    "White Sox": "Chi Sox",
-    "Angels": "LA Angels",
-    "Athletics": "Oakland",
-    "Cubs": "Chi Cubs",
-    "Braves": "Atlanta",
-    "Reds": "Cincinnati",
-    "Astros": "Houston",
-    "Padres": "San Diego",
-    "Dodgers": "LA Dodgers",
-    "Marlins": "Miami",
-    "Twins": "Minnesota",
-    "Guardians": "Cleveland",
-    "Red Sox": "Boston",
-    "Rays": "Tampa Bay",
-    "Nationals": "Washington",
-    "Mets": "NY Mets",
-    "Tigers": "Detroit",
-    "Royals": "Kansas City",
-    "Phillies": "Philadelphia",
-    "Brewers": "Milwaukee",
-    "Pirates": "Pittsburgh",
-    "Cardinals": "St. Louis",
-    "Blue Jays": "Toronto",
-    "Rangers": "Texas",
-    "Yankees": "NY Yankees",
-    "Mariners": "Seattle",
-}
-
-espn_to_acr = {
-    "Giants": "SFG",
-    "Orioles": "BAL",
-    "Diamondbacks": "ARI",
-    "Rockies": "COL",
-    "White Sox": "CHW",
-    "Angels": "LAA",
-    "Athletics": "OAK",
-    "Cubs": "CHC",
-    "Braves": "ATL",
-    "Reds": "CIN",
-    "Astros": "HOU",
-    "Padres": "SDP",
-    "Dodgers": "LAD",
-    "Marlins": "MIA",
-    "Twins": "MIN",
-    "Guardians": "CLE",
-    "Red Sox": "BOS",
-    "Rays": "TBR",
-    "Nationals": "WSN",
-    "Mets": "NYM",
-    "Tigers": "DET",
-    "Royals": "KCR",
-    "Phillies": "PHI",
-    "Brewers": "MIL",
-    "Pirates": "PIT",
-    "Cardinals": "STL",
-    "Blue Jays": "TOR",
-    "Rangers": "TEX",
-    "Yankees": "NYY",
-    "Mariners": "SEA",
-}
-
 
 home_starter_IP_var = -1
 away_starter_IP_var = -1
@@ -145,7 +79,7 @@ def game_func(home_input, home_input_acr, home_input_starter, away_input, away_i
             #threshold .5? could change later
             if ((home_starter_starts / home_starter_games) < 0.5):
                 #MANUALLY ENTER:
-                home_starter_avg_IP = away_starter_IP_var
+                home_starter_avg_IP = home_starter_IP_var
             else:
                 #result from the change of decimal formatting
                 home_starter_IP = ((temp_IP_floored * 3) + extra_outs)/3
@@ -306,15 +240,5 @@ def game_func(home_input, home_input_acr, home_input_starter, away_input, away_i
     print()
     print()
 
-def user_interface():
-    #find through parsing html
-    espn_away_team = "EX"
-    espn_home_team = "EX"
-    espn_away_starter = "EX"
-    espn_home_starter = "EX"
 
-    #use dictionary to get matching acr and correct name for team table
-
-
-
-game_func(home_input="Houston", home_input_acr="HOU", home_input_starter="Yusei Kikuchi", away_input="LA Angels", away_input_acr="LAA", away_input_starter="Jose Suarez")
+game_func(home_input="LA Dodgers", home_input_acr="LAD", home_input_starter="Walker Buehler", away_input="Colorado", away_input_acr="COL", away_input_starter="Cal Quantrill")

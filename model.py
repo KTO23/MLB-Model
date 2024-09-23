@@ -77,7 +77,7 @@ def game_func(home_input, home_input_acr, home_input_starter, away_input, away_i
             home_starter_starts = float(pitcher_data['GSGS - Games Started'][index])
             home_starter_games = float(pitcher_data['GG - Games Pitched'][index])
             #threshold .5? could change later
-            if ((home_starter_starts / home_starter_games) < 0.5):
+            if ((home_starter_starts / home_starter_games) <= 0.5):
                 #MANUALLY ENTER:
                 home_starter_avg_IP = home_starter_IP_var
             else:
@@ -105,7 +105,7 @@ def game_func(home_input, home_input_acr, home_input_starter, away_input, away_i
             away_starter_starts = float(pitcher_data['GSGS - Games Started'][index])
             away_starter_games = float(pitcher_data['GG - Games Pitched'][index])
             #threshold .5? could change later
-            if ((away_starter_starts / away_starter_games) < 0.5):
+            if ((away_starter_starts / away_starter_games) <= 0.5):
                 #MANUALLY ENTER:
                 away_starter_avg_IP = away_starter_IP_var
             else:
@@ -241,4 +241,4 @@ def game_func(home_input, home_input_acr, home_input_starter, away_input, away_i
     print()
 
 
-game_func(home_input="LA Dodgers", home_input_acr="LAD", home_input_starter="Walker Buehler", away_input="Colorado", away_input_acr="COL", away_input_starter="Cal Quantrill")
+game_func(home_input="Chi Cubs", home_input_acr="CHC", home_input_starter="Shota Imanaga", away_input="Washington", away_input_acr="WSN", away_input_starter="Jake Irvin")

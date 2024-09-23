@@ -19,33 +19,28 @@ def game_log_padres_func():
     #labels = game_table.find_all('th')
     column_titles = [title.text for title in labels[1:21]]
     #print(column_titles)
-    column_titles[1] = "boxscore/preview"
-    column_titles[3] = "'@ or ' '(home)"
-    gamedf = pd.DataFrame(columns=column_titles)
-    print(gamedf)
-
-    print()
-
-    game_table_data = game_table.find_all('tr')
-    true_length = 0
-    print(len(game_table_data))
-
-    row_ranges = list(range(1, len(game_table_data)))
-
-    for row in game_table_data[1:]:
-        row_data = row.find_all('td')
-        row_text = [data.text for data in row_data]
-        length = len(pitcherdf)
-        pitcherdf.loc[length] = row_text
-
-    print(pitcherdf)
-    return pitcherdf
+    column_titles[1] = "past/future"
+    column_titles[3] = "H/A"
+    pastgamesdf = pd.DataFrame(columns=column_titles)
+    column_titles[5] = "starttime"
+    futuregamesdf = pd.DataFrame(columns=column_titles[:6])
 
 
-    print(gamedf)
-    return gamedf
-
-    #troubleshooting
-    #print(gamedf)
+    game_table_rows = game_table.find_all('tr')
+    # Loop through the rows and exclude ones with a certain class
+    for row in game_table_rows:
+        # Exclude rows with the class 'exclude-class'
+        if 'thead' in row.get('class', []):
+            continue  # Skip this row if it has the class 'exclude-class'
+        else:
+            col_data = row.find_all('td')[:20]  # Get the first 20 columns of data
+            if col_data:  # Only process if the row has <td> elements (not header rows)
+                row_text = [data.text for data in col_data]
+                if(row_text[1] == 'preview'): #this is a future game
+                    futuregamesdf.loc[len(futuregamesdf)] = row_text[:6]
+                else:
+                    pastgamesdf.loc[len(pastgamesdf)] = row_text
+   
+    print(pastgamesdf)
 
 game_log_padres_func()

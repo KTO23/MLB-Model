@@ -4,17 +4,21 @@ from team_data import *
 from refresh_data import *
 import math
 
-pitcher_data = refresh_pitcher_df()
-team_data = refresh_team_data_df()
 
 #pitcher_data = get_stored_pitcher_df()
 #team_data = get_stored_team_df()
 
 
-home_starter_IP_var = -1
-away_starter_IP_var = -1
+#home_starter_IP_var = -1
+#away_starter_IP_var = -1
 
-def game_func(home_input, home_input_acr, home_input_starter, away_input, away_input_acr, away_input_starter):
+def game_func(input_pitcher_data, input_team_data, home_input, home_input_acr, home_input_starter, away_input, away_input_acr, away_input_starter):
+    pitcher_data = input_pitcher_data
+    team_data = input_team_data
+
+    home_starter_IP_var = -1
+    away_starter_IP_var = -1
+
     #setting teams and pitchers
     home_team = home_input
     home_acr = home_input_acr
@@ -79,6 +83,8 @@ def game_func(home_input, home_input_acr, home_input_starter, away_input, away_i
             #threshold .5? could change later
             if ((home_starter_starts / home_starter_games) <= 0.5):
                 #MANUALLY ENTER:
+                while((home_starter_IP_var < 0 or home_starter_IP_var > 9)):
+                    home_starter_IP_var = int(input("Not a starter. Enter est IP for " + str(home_input_starter) + ": "))
                 home_starter_avg_IP = home_starter_IP_var
             else:
                 #result from the change of decimal formatting
@@ -107,6 +113,8 @@ def game_func(home_input, home_input_acr, home_input_starter, away_input, away_i
             #threshold .5? could change later
             if ((away_starter_starts / away_starter_games) <= 0.5):
                 #MANUALLY ENTER:
+                while((away_starter_IP_var < 0 or away_starter_IP_var > 9)):
+                    away_starter_IP_var = int(input("Not a starter. Enter est IP for " + str(away_input_starter) + ": "))
                 away_starter_avg_IP = away_starter_IP_var
             else:
                 #result from the change of decimal formatting
@@ -114,6 +122,76 @@ def game_func(home_input, home_input_acr, home_input_starter, away_input, away_i
                 #getting avg start length
                 away_starter_avg_IP = away_starter_IP/away_starter_starts
 
+    need_rerun = False
+    if(home_starter_IP == 0):
+        home_starter = input("Name not found. Another name for " + home_starter + "?: ")
+        need_rerun = True
+
+    elif(away_starter_IP == 0):
+        home_starter = input("Name not found. Another name for " + home_starter + "?: ")
+        need_rerun = True
+
+    if(need_rerun):
+        for index,row in pitcher_data.iterrows():
+            if row['Name'] == home_starter:
+                #era and IP data
+                home_starter_era = float(pitcher_data['ERAERA - Earned Run Average ((ER*9)/IP)'][index])
+                home_starter_IP = float(pitcher_data['IPIP - Innings Pitched'][index])
+
+                #changing innings format: 17.1 --> 17.3, 67.2 --> 67.667
+                temp_IP_floored = math.floor(home_starter_IP)
+                temp_IP_difference = home_starter_IP - temp_IP_floored
+                extra_outs = 0
+                if(round(temp_IP_difference, 1) == 0.1):
+                    extra_outs = 1
+                elif(round(temp_IP_difference, 1) == 0.2):
+                    extra_outs = 2
+                
+                #making sure they are a true starter
+                #otherwise inning estimate will not be accurate
+                home_starter_starts = float(pitcher_data['GSGS - Games Started'][index])
+                home_starter_games = float(pitcher_data['GG - Games Pitched'][index])
+                #threshold .5? could change later
+                if ((home_starter_starts / home_starter_games) <= 0.5):
+                    #MANUALLY ENTER:
+                    while((home_starter_IP_var < 0 or home_starter_IP_var > 9)):
+                        home_starter_IP_var = int(input("Not a starter. Enter est IP for " + str(home_input_starter) + ": "))
+                    home_starter_avg_IP = home_starter_IP_var
+                else:
+                    #result from the change of decimal formatting
+                    home_starter_IP = ((temp_IP_floored * 3) + extra_outs)/3
+                    #getting avg start length
+                    home_starter_avg_IP = home_starter_IP/home_starter_starts 
+
+            elif row['Name'] == away_starter:
+                #era and IP data
+                away_starter_era = float(pitcher_data['ERAERA - Earned Run Average ((ER*9)/IP)'][index])
+                away_starter_IP = float(pitcher_data['IPIP - Innings Pitched'][index])
+                
+                #changing innings format: 17.1 --> 17.3, 67.2 --> 67.667
+                temp_IP_floored = math.floor(away_starter_IP)
+                temp_IP_difference = away_starter_IP - temp_IP_floored
+                extra_outs = 0
+                if(round(temp_IP_difference, 1) == 0.1):
+                    extra_outs = 1
+                elif(round(temp_IP_difference, 1) == 0.2):
+                    extra_outs = 2
+
+                #making sure they are a true starter
+                #otherwise inning estimate will not be accurate
+                away_starter_starts = float(pitcher_data['GSGS - Games Started'][index])
+                away_starter_games = float(pitcher_data['GG - Games Pitched'][index])
+                #threshold .5? could change later
+                if ((away_starter_starts / away_starter_games) <= 0.5):
+                    #MANUALLY ENTER:
+                    while((away_starter_IP_var < 0 or away_starter_IP_var > 9)):
+                        away_starter_IP_var = int(input("Not a starter. Enter est IP for " + str(away_input_starter) + ": "))
+                    away_starter_avg_IP = away_starter_IP_var
+                else:
+                    #result from the change of decimal formatting
+                    away_starter_IP = ((temp_IP_floored * 3) + extra_outs)/3
+                    #getting avg start length
+                    away_starter_avg_IP = away_starter_IP/away_starter_starts
     #converting avg IP to outs
     home_starter_avg_outs = int(round(home_starter_avg_IP*3))
     away_starter_avg_outs = int(round(away_starter_avg_IP*3))
@@ -241,4 +319,4 @@ def game_func(home_input, home_input_acr, home_input_starter, away_input, away_i
     print()
 
 
-game_func(home_input="Chi Cubs", home_input_acr="CHC", home_input_starter="Shota Imanaga", away_input="Washington", away_input_acr="WSN", away_input_starter="Jake Irvin")
+#game_func(home_input="Chi Cubs", home_input_acr="CHC", home_input_starter="Shota Imanaga", away_input="Washington", away_input_acr="WSN", away_input_starter="Jake Irvin")

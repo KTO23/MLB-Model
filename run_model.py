@@ -2,11 +2,20 @@
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
+from model import *
 
-espn_to_teams_data_dict = {
+from pitcher_data import *
+from team_data import *
+from refresh_data import *
+
+
+
+
+
+br_to_teams_data_dict = {
     "Giants": "SF Giants",
     "Orioles": "Baltimore",
-    "Diamondbacks": "Arizona",
+    "D'backs": "Arizona",
     "Rockies": "Colorado",
     "White Sox": "Chi Sox",
     "Angels": "LA Angels",
@@ -36,10 +45,10 @@ espn_to_teams_data_dict = {
     "Mariners": "Seattle",
 }
 
-espn_to_acr = {
+br_to_acr = {
     "Giants": "SFG",
     "Orioles": "BAL",
-    "Diamondbacks": "ARI",
+    "D'backs": "ARI",
     "Rockies": "COL",
     "White Sox": "CHW",
     "Angels": "LAA",
@@ -71,39 +80,41 @@ espn_to_acr = {
 
 
 def run_model():
-    #espn_url = "https://sports.yahoo.com/mlb/pittsburgh-pirates-cincinnati-reds-440921117/"
-    #espn_url = "https://www.espn.com/mlb/game/_/gameId/401570791/pirates-reds"
-    #espn_url = "https://www.foxsports.com/mlb/pittsburgh-pirates-vs-cincinnati-reds-sep-22-2024-game-boxscore-90550"
-    espn_url = "https://www.espn.com/mlb/schedule/_/date/20240921"
-    espn_page = requests.get(espn_url).text
-    espn_soup = BeautifulSoup(espn_page, features="html.parser")
+    br_url = "https://www.baseball-reference.com/previews/"
+    page = requests.get(br_url)
+    soup = BeautifulSoup(page.text, features='html.parser')
 
-    #sorting data to find titles of table we want
-    #home_team_espn = espn_soup.find('a', class_ = "ys-name Mb(4px) C(#fff)")
-    #home_team_espn = espn_soup.find('a', class_ = "player-name fs-20 fs-sm-18")
-    #name = home_team_espn.find("href")
+    pitcher_data = refresh_pitcher_df()
+    team_data = refresh_team_data_df()
 
 
-    home_team_espn = espn_soup.find_all('table')
-    print(home_team_espn)
+    game_tables = soup.find_all('table', class_ = "teams")
+    games_done = 0
 
-    '''
-    table_titles = [title.text for title in game_table_titles]
+    for games in game_tables:
+        teams = games.find_all('a')
+        team_names = [title.text for title in teams]
 
-    #making dataframe with titles
-    team_runs_per_game_df = pd.DataFrame (columns = table_titles)
+        away_team = team_names[0]
+        home_team = team_names[2]
 
-    #sorting through table and putting data into our dataframe
-    col_data = game_table.find_all('tr')
-    for row in col_data[1:]:
-        row_data = row.find_all('td')
-        individual_row_data = [data.text for data in row_data]
-        length = len(team_runs_per_game_df)
-        team_runs_per_game_df.loc[length] = individual_row_data
+        temp = soup.find_all('table')[games_done + 1]
+        temp2 = temp.find_all('a')
+        pitcher_names = [title.text for title in temp2]
+        away_starter = pitcher_names[0]
+        home_starter = pitcher_names[1]
+        games_done = games_done + 2
 
-    team_runs_per_game_df = team_runs_per_game_df.drop(['Rank'], axis=1)
-    return(team_runs_per_game_df)
-    '''
+        home_acr = br_to_acr[home_team]
+        away_acr = br_to_acr[away_team]
+
+        home_team_dict = br_to_teams_data_dict[home_team]
+        away_team_dict = br_to_teams_data_dict[away_team]
+
+        game_func(input_pitcher_data=pitcher_data, input_team_data=team_data,home_input=home_team_dict, home_input_acr=home_acr, home_input_starter=home_starter, away_input=away_team_dict, away_input_acr=away_acr, away_input_starter=away_starter)
+
+
+    #print(game_tables)
 
 run_model()
 

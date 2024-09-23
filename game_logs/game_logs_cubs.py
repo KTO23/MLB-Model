@@ -8,8 +8,8 @@ import pandas as pd
 #page2 = requests.get(url2)
 #soup2 = BeautifulSoup(page2.text, features="html.parser")
 
-def game_log_padres_func():
-    url = 'https://www.baseball-reference.com/teams/SDP/2024-schedule-scores.shtml#all_results'
+def game_log_cubs_func():
+    url = 'https://www.baseball-reference.com/teams/CHC/2024-schedule-scores.shtml#all_results'
     page = requests.get(url)
     soup = BeautifulSoup(page.text, features='html.parser')
 
@@ -43,4 +43,6 @@ def game_log_padres_func():
    
     print(pastgamesdf)
 
-game_log_padres_func()
+    return pastgamesdf
+
+game_log_cubs_func()

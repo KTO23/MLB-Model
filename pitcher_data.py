@@ -29,7 +29,7 @@ def pitcher_data_func():
         length = len(pitcherdf)
         pitcherdf.loc[length] = row_text
 
-    print(pitcherdf)
+    #print(pitcherdf)
     return pitcherdf
 
     #troubleshooting

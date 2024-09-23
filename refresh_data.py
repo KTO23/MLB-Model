@@ -7,12 +7,12 @@ stored_team_df = pd.DataFrame()
 
 def refresh_pitcher_df():
     updated_pitcher_df = pitcher_data_func()
-    stored_pitcher_df = updated_pitcher_df.copy()
+    #stored_pitcher_df = updated_pitcher_df.copy()
     return updated_pitcher_df
 
 def refresh_team_data_df():
     updated_team_df = team_data_func()
-    stored_team_df = updated_team_df.copy()
+    #stored_team_df = updated_team_df.copy()
     return updated_team_df
 
 def get_stored_pitcher_df():

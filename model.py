@@ -128,7 +128,7 @@ def game_func(input_pitcher_data, input_team_data, home_input, home_input_acr, h
         need_rerun = True
 
     elif(away_starter_IP == 0):
-        home_starter = input("Name not found. Another name for " + home_starter + "?: ")
+        away_starter = input("Name not found. Another name for " + away_starter + "?: ")
         need_rerun = True
 
     if(need_rerun):
@@ -319,4 +319,4 @@ def game_func(input_pitcher_data, input_team_data, home_input, home_input_acr, h
     print()
 
 
-#game_func(home_input="Chi Cubs", home_input_acr="CHC", home_input_starter="Shota Imanaga", away_input="Washington", away_input_acr="WSN", away_input_starter="Jake Irvin")
+#game_func(input_pitcher_data=pitcher_data, input_team_data=team_data, home_input="Chi Sox", home_input_acr="CHW", home_input_starter="Davis Martin", away_input="LA Angels", away_input_acr="LAA", away_input_starter="José Suarez")

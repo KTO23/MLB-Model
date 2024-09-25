@@ -24,12 +24,17 @@ def get_current_odds_data_func():
 
     #print(column_titles)
     col_data = games_table.find_all('tr')
+    #print(col_data)
 
-    for row in col_data:
-        row_data = row.find_all('td')
-        row_text = [data.text for data in row_data]
+    
+    for row in col_data[1:]:
+        team_temp = row.find('th')
+        team_temp2 = team_temp.find_all('div')[7]
+        team_name = [data.text for data in team_temp2]
+
+        row_data = 
         length = len(oddsdf)
-        oddsdf.loc[length] = row_text
+        #oddsdf.loc[length] = row_text
     
 
     print(oddsdf)

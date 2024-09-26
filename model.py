@@ -3,7 +3,7 @@ from pitcher_data import *
 from team_data import *
 from refresh_data import *
 import math
-
+from logging_funcs import *
 
 #pitcher_data = get_stored_pitcher_df()
 #team_data = get_stored_team_df()
@@ -12,7 +12,7 @@ import math
 #home_starter_IP_var = -1
 #away_starter_IP_var = -1
 
-def game_func(input_pitcher_data, input_team_data, home_input, home_input_acr, home_input_starter, away_input, away_input_acr, away_input_starter):
+def game_func(input_pitcher_data, input_team_data, home_input, home_input_acr, home_input_starter, away_input, away_input_acr, away_input_starter, date_input):
     pitcher_data = input_pitcher_data
     team_data = input_team_data
 
@@ -26,6 +26,8 @@ def game_func(input_pitcher_data, input_team_data, home_input, home_input_acr, h
     away_team = away_input
     away_acr = away_input_acr
     away_starter = away_input_starter
+
+    date = date_input
 
     #data colleted from team_data
     home_rpg = 0
@@ -279,6 +281,9 @@ def game_func(input_pitcher_data, input_team_data, home_input, home_input_acr, h
     est_total_runs_allowed = est_runs_allowed_home + est_runs_allowed_away
     est_total_rpg = float(home_rpg) + float(away_rpg)
 
+    est_home_score = (float(home_rpg) + est_runs_allowed_away)/2
+    est_away_score = (float(away_rpg) + est_runs_allowed_home)/2
+
     averaged_amount = (est_total_runs_allowed + est_total_rpg)/2
 
     print()
@@ -317,6 +322,12 @@ def game_func(input_pitcher_data, input_team_data, home_input, home_input_acr, h
     print()
     print()
     print()
+
+
+    #self, input_date, input_home_team, input_home_starter, input_home_starter_ERA, input_home_starter_est_IP, input_home_starter_est_ER, input_home_bullpen_est_ER, input_away_team, input_away_starter, , input_away_starter_ERA, input_away_starter_est_IP, input_away_starter_est_ER, input_away_bullpen_est_ER,):
+
+    this_bet_slip = bet_slip(date, home_team, home_starter, home_starter_era, home_starter_avg_IP, est_home_starter_runs, home_bullpen_era, est_home_bullpen_runs, away_team, away_starter, away_starter_era, away_starter_avg_IP, est_away_starter_runs, away_bullpen_era, away_bullpen_ER, est_home_score, est_away_score)
+    return this_bet_slip
 
 
 #game_func(input_pitcher_data=pitcher_data, input_team_data=team_data, home_input="Chi Sox", home_input_acr="CHW", home_input_starter="Davis Martin", away_input="LA Angels", away_input_acr="LAA", away_input_starter="José Suarez")

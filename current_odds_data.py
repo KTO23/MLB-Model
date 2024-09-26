@@ -29,7 +29,7 @@ def get_current_odds_data_func():
     #print(col_data)
 
     
-    for row in col_data[1:]:
+    for row in col_data[1:3]:
         team_temp = row.find('th')
         team_temp2 = team_temp.find_all('div')[7]
         team_name = [data.text for data in team_temp2]
@@ -41,7 +41,7 @@ def get_current_odds_data_func():
         #run line juice
         run_line_juice_data = row.find_all('div')[16]
         run_line_juice = [data.text for data in run_line_juice_data]
-
+        
         #total
         total_data = row.find_all('div')[20]
         total_line_temp = [data.text for data in total_data]

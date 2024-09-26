@@ -91,6 +91,8 @@ def run_model():
     game_tables = soup.find_all('table', class_ = "teams")
     games_done = 0
 
+    date = input("What is the date?(mm/dd/yyyy): ")
+
     for games in game_tables:
         teams = games.find_all('a')
         team_names = [title.text for title in teams]
@@ -111,7 +113,8 @@ def run_model():
         home_team_dict = br_to_teams_data_dict[home_team]
         away_team_dict = br_to_teams_data_dict[away_team]
 
-        game_func(input_pitcher_data=pitcher_data, input_team_data=team_data,home_input=home_team_dict, home_input_acr=home_acr, home_input_starter=home_starter, away_input=away_team_dict, away_input_acr=away_acr, away_input_starter=away_starter)
+
+        game_func(input_pitcher_data=pitcher_data, input_team_data=team_data,home_input=home_team_dict, home_input_acr=home_acr, home_input_starter=home_starter, away_input=away_team_dict, away_input_acr=away_acr, away_input_starter=away_starter, date_input = date)
 
 
     #print(game_tables)
